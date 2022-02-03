@@ -16,7 +16,8 @@ class App extends Component{
                 {name: 'Alex W.', salary: 500, increase: false, rise: false, id: 1},
                 {name: 'John C.', salary: 3000, increase: false, rise: true, id: 2},
                 {name: 'Carl M.', salary: 15000, increase: true, rise: false, id: 3},
-            ]
+            ],
+            nameTurn: '',
         }
         this.maxId = 4;
     }
@@ -59,6 +60,22 @@ class App extends Component{
         }))
     }
 
+    employeeSearch = (items, nameTurn) => {
+        if (nameTurn.length === 0) {
+            return items;
+        }
+
+        return items.filter(item => {
+            return item.name.indexOf(nameTurn) > -1;
+        })
+    }
+
+    onSearch = (nameTurn) => {
+        this.setState({
+            nameTurn
+        })
+    }
+
     // onToggleRise = (id) => {
     //     this.setState(({data}) => ({
     //         data: data.map(item => {
@@ -72,20 +89,23 @@ class App extends Component{
     //     }))
     // }
 
-    render() {    
+    render() {
+        const { data, nameTurn } = this.state;
+
         const allEmployees = this.state.data.length;
         const employeeIncreased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.employeeSearch(data, nameTurn);
 
         return (
             <div className="app">
                 <AppInfo allEmployees={allEmployees} employeeIncreased={employeeIncreased}/>
     
                 <div className="search-panel">
-                    <SearchPanel/>
+                    <SearchPanel onSearch={this.onSearch}/>
                     <AppFilter/>
                 </div>
     
-                <EmployeesList data={this.state.data}
+                <EmployeesList data={visibleData}
                             onDelete={this.deleteItem}
                             onToggleProp={this.onToggleProp}
                             />
