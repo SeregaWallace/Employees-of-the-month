@@ -18,6 +18,7 @@ class App extends Component{
                 {name: 'Carl M.', salary: 15000, increase: true, rise: false, id: 3},
             ],
             nameTurn: '',
+            filtered: 'all',
         }
         this.maxId = 4;
     }
@@ -76,6 +77,23 @@ class App extends Component{
         })
     }
 
+    filter = (items, filter) => {
+        switch (filter) {
+            case 'rise':
+                return items.filter(item => item.rise);
+                
+            case 'offerMore1000':
+                return items.filter(item => item.salary > 1000);
+
+            default:
+                return items;
+        }
+    }
+
+    onFilterSelect = (filtered) => {
+        this.setState({filtered});
+    }
+
     // onToggleRise = (id) => {
     //     this.setState(({data}) => ({
     //         data: data.map(item => {
@@ -90,11 +108,11 @@ class App extends Component{
     // }
 
     render() {
-        const { data, nameTurn } = this.state;
+        const { data, nameTurn, filtered } = this.state;
 
         const allEmployees = this.state.data.length;
         const employeeIncreased = this.state.data.filter(item => item.increase).length;
-        const visibleData = this.employeeSearch(data, nameTurn);
+        const visibleData = this.filter(this.employeeSearch(data, nameTurn), filtered);
 
         return (
             <div className="app">
@@ -102,7 +120,8 @@ class App extends Component{
     
                 <div className="search-panel">
                     <SearchPanel onSearch={this.onSearch}/>
-                    <AppFilter/>
+                    <AppFilter filter={filtered}
+                                onFilterSelect={this.onFilterSelect}/>
                 </div>
     
                 <EmployeesList data={visibleData}
