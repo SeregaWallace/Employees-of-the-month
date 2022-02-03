@@ -47,7 +47,16 @@ class App extends Component{
     }
 
     onToggleIncrease = (id) => {
-
+        this.setState(({data}) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return {
+                        ...item, increase: !item.increase
+                    }
+                }
+                return item
+            })
+        }))
     }
 
     onToggleRise = (id) => {
